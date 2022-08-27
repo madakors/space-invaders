@@ -1,14 +1,15 @@
-# Development assignment
+# Space Invaders
 
 Space invaders are upon us!
 You were shortlisted as one of the great minds to help us track them down.
 
-Your Ruby application must take a radar sample as an argument and reveal possible locations of those pesky invaders.
-Good luck!
+Your Ruby application must take a radar sample as an argument and reveal
+possible locations of those pesky invaders. Good luck!
 
 ### Requirements:
 - No image detection, this is all about ASCII patterns
-- Good OOP architecture is a must. This is a perfect opportunity to demonstrate the SOLID design principle experience.
+- Good OOP architecture is a must. This is a perfect opportunity to demonstrate
+the SOLID design principle experience.
 - Fully tested code with RSpec
 
 ### Tips:
