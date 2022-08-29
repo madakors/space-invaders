@@ -1,0 +1,105 @@
+#! /usr/bin/env ruby
+
+require 'zeitwerk'
+
+loader = Zeitwerk::Loader.new
+loader.push_dir('lib')
+loader.setup
+
+require 'pry'
+
+radio = Readers::Radio.new('input').load
+invaders = Readers::Invaders.new('inputs/invaders').load
+
+StartingPosition = Struct.new(:invader, :column_index, :row_index)
+
+class Spottings
+  def initialize
+    @spottings = []
+  end
+
+  def add(spotting)
+    @spottings << spotting
+  end
+
+  def verify(radio_segment, column_index)
+    @spottings.map { |spotting| spotting.advance(radio_segment, column_index) }
+  end
+
+  def cleanup!
+    @spottings.reject! { |spotting| spotting.invalid? }
+  end
+
+  def count
+    @spottings.count
+  end
+
+  def all
+    @spottings
+  end
+end
+
+class Spotting
+  LIMIT = 10
+
+  def initialize(invader, column_index, row_index)
+    @invader = invader
+    @column_index = column_index
+    @row_index = row_index
+    @difference = 0
+    mark_position
+  end
+
+  def advance(candidate, position)
+    return if @column_index != position
+
+    @difference += algorithm(candidate, @invader.next_segment)
+  end
+
+  def valid?
+    @difference <= LIMIT
+  end
+
+  def invalid?
+    !valid?
+  end
+
+  def complete?
+    !@invader.next_segment?
+  end
+
+  private
+
+  def mark_position
+    @position = {
+      x_start: @column_index,
+      y_start: @row_index,
+      x_end: @column_index + @invader.width,
+      y_end: @row_index + @invader.height
+    }
+  end
+end
+
+spottings = Spottings.new
+
+def algorithm(radio_segment, invader_line)
+  radio_segment == invader_line ? 0 : 1
+end
+
+radio.each_with_index do |row, row_index|
+  invaders.each do |invader|
+    row.split('').each_cons(invader.width).map(&:join).each_with_index do |radio_segment, column_index|
+
+      if algorithm(radio_segment, invader.head).zero?
+        spottings.add(Spotting.new(invader, column_index, row_index))
+      end
+
+      spottings.verify(radio_segment, column_index)
+
+      spottings.cleanup!
+    end
+  end
+end
+
+binding.pry
+p spottings
