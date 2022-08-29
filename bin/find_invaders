@@ -23,6 +23,7 @@ class Spottings
   end
 
   def verify(radio_segment, column_index)
+
     @spottings.map { |spotting| spotting.advance(radio_segment, column_index) }
   end
 
@@ -34,13 +35,17 @@ class Spottings
     @spottings.count
   end
 
-  def all
-    @spottings
+  def complete
+    @spottings.filter { |spotting| spotting.valid? && spotting.complete? }
+  end
+
+  def find_for(point_x, point_y)
+    complete.find { |spotting| spotting.includes?(point_x, point_y) }
   end
 end
 
 class Spotting
-  LIMIT = 10
+  LIMIT = 5
 
   def initialize(invader, column_index, row_index)
     @invader = invader
@@ -52,6 +57,7 @@ class Spotting
 
   def advance(candidate, position)
     return if @column_index != position
+    return if complete?
 
     @difference += algorithm(candidate, @invader.next_segment)
   end
@@ -68,14 +74,19 @@ class Spotting
     !@invader.next_segment?
   end
 
+  def includes?(point_x, point_y)
+    point_x >= @position[:x_start] && point_x <= @position[:x_end] &&
+      point_y >= @position[:y_start] && point_y <= @position[:y_end]
+  end
+
   private
 
   def mark_position
     @position = {
       x_start: @column_index,
       y_start: @row_index,
-      x_end: @column_index + @invader.width,
-      y_end: @row_index + @invader.height
+      x_end: @column_index + @invader.width - 1,
+      y_end: @row_index + @invader.height - 1
     }
   end
 end
@@ -86,12 +97,27 @@ def algorithm(radio_segment, invader_line)
   radio_segment == invader_line ? 0 : 1
 end
 
-radio.each_with_index do |row, row_index|
-  invaders.each do |invader|
+class Printer
+  class << self
+    RED=31
+    GREEN=32
+    BLUE=34
+
+    def color(color=BLUE)
+      printf "\033[#{color}m"
+      yield
+      printf "\033[0m"
+    end
+  end
+end
+
+invaders.each do |invader|
+  radio.each_with_index do |row, row_index|
     row.split('').each_cons(invader.width).map(&:join).each_with_index do |radio_segment, column_index|
+      # binding.pry
 
       if algorithm(radio_segment, invader.head).zero?
-        spottings.add(Spotting.new(invader, column_index, row_index))
+        spottings.add(Spotting.new(invader.dup, column_index, row_index))
       end
 
       spottings.verify(radio_segment, column_index)
@@ -101,5 +127,18 @@ radio.each_with_index do |row, row_index|
   end
 end
 
-binding.pry
-p spottings
+
+radio.each_with_index do |row, row_index|
+  row.split('').each_with_index do |row_segment, column_index|
+    spotting = spottings.find_for(column_index, row_index)
+
+    if spotting
+      Printer.color { print row_segment }
+    else
+      print row_segment
+    end
+  end
+  puts ''
+end
+
+# spottings.all

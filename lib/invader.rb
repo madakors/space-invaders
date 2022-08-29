@@ -24,10 +24,11 @@ class Invader
   end
 
   def next_segment
-    @segment += 1
-    return nil if @segment == @pattern.length - 1
+    return nil if @segment == @pattern.length
 
-    @pattern[@segment]
+    segment = @pattern[@segment]
+    @segment += 1
+    segment
   end
 
   def next_segment?
