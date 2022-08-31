@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-# Takes an invader and tries to spot in the radio feed using.
+# Takes an invader and tries to spot it in the radio feed using the spotter
+# algorithm
 class InvaderSpotter
   def initialize(invader, radio)
     @invader = invader
