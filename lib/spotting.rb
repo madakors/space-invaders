@@ -10,7 +10,6 @@ class Spotting
     @column_index = column_index
     @row_index = row_index
     @difference = 0
-    @iterator = InvaderIterator.new(@invader)
     mark_position
   end
 
@@ -39,6 +38,10 @@ class Spotting
   end
 
   private
+
+  def iterator
+    @iterator ||= InvaderIterator.new(@invader)
+  end
 
   def mark_position
     @position = {
