@@ -1,17 +1,23 @@
-module Readers
-  class Radio
-    SEPARATOR = '~~~~'
+# frozen_string_literal: true
 
+module Readers
+  # Reader for radio input
+  class Radio
     InvalidRadioFileError = Class.new(StandardError)
 
     def initialize(input)
       @input = input
-      @radio_signals = []
+      @radio = []
     end
 
     def load
+      raise InvalidRadioFileError, 'Radio input file is missing' unless File.exist?(@input)
+
       load_radio_signals
-      @radio_signals
+
+      raise InvalidRadioFileError, 'No radio loaded' if @radio.empty?
+
+      ::Radio.new(@radio)
     end
 
     private
@@ -19,9 +25,8 @@ module Readers
     def load_radio_signals
       File.foreach(@input).with_index do |line, index|
         line.chomp!
-        raise InvalidRadioFileError, 'Missing separator' if index.zero? && line != SEPARATOR
 
-        @radio_signals << line unless line == SEPARATOR
+        @radio << line
       end
     end
   end

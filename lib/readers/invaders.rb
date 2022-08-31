@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require'pry'
 module Readers
   # Reader for invaders input
   class Invaders

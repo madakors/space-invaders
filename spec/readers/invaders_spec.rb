@@ -39,7 +39,6 @@ RSpec.describe Readers::Invaders do
       let(:input) { File.join(File.expand_path(File.dirname(File.dirname(__FILE__))), '/fixtures/invaders_input') }
 
       it 'returns a list of parsed invaders' do
-        binding.pry
         expect(subject.load).to contain_exactly(be_a(Invader), be_a(Invader))
       end
     end
