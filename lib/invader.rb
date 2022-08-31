@@ -1,13 +1,12 @@
+# frozen_string_literal: true
+
+# Value object for invader pattern
 class Invader
   InvalidInvaderPattern = Class.new(StandardError)
-
-  def self.build(pattern:)
-    new(pattern)
-  end
+  InvalidInvaderAccess = Class.new(StandardError)
 
   def initialize(pattern)
     @pattern = pattern
-    @segment = 0
     raise InvalidInvaderPattern, 'Nonuniform pattern supplied' unless valid?
   end
 
@@ -19,20 +18,14 @@ class Invader
     @pattern.length
   end
 
+  def pattern_at(index)
+    raise InvalidInvaderAccess, "#{index} is out of bounds for this invader pattern" if index >= height
+
+    @pattern[index]
+  end
+
   def width
     head.length
-  end
-
-  def next_segment
-    return nil if @segment == @pattern.length
-
-    segment = @pattern[@segment]
-    @segment += 1
-    segment
-  end
-
-  def next_segment?
-    @segment < @pattern.length - 1
   end
 
   attr_reader :pattern
@@ -40,6 +33,6 @@ class Invader
   private
 
   def valid?
-    @pattern.all? { |sub| sub.length == @pattern.first.length }
+    @pattern.all? { |row| row.length == head.length }
   end
 end
