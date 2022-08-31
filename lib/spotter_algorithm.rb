@@ -2,6 +2,8 @@
 
 require 'singleton'
 
+# Class for comparing a radio segment with an invader line.
+# It can also determine if the number of differences exceed the allowed limit
 class SpotterAlgorithm
   include Singleton
 
