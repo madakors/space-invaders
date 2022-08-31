@@ -21,16 +21,12 @@ class InvaderSpotter
     @radio.iterate(@invader.width) do |radio_segment, row_index, column_index|
       @spottings.add(Spotting.new(@invader, column_index, row_index)) if head_matches?(radio_segment)
 
-      @spottings.verify(radio_segment, column_index, algorithm)
+      @spottings.verify(radio_segment, column_index)
       @spottings.cleanup!
     end
   end
 
   def head_matches?(radio_segment)
-    algorithm.call(radio_segment, @invader.head).zero?
-  end
-
-  def algorithm
-    @algorithm ||= ->(radio_segment, invader_line) { radio_segment == invader_line ? 0 : 1 }
+    SpotterAlgorithm.instance.spot(radio_segment, @invader.head).zero?
   end
 end
