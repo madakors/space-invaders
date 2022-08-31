@@ -28,8 +28,6 @@ class Invader
     head.length
   end
 
-  attr_reader :pattern
-
   private
 
   def valid?
