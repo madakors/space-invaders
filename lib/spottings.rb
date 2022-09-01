@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Class that manages the various spottings
 class Spottings
   def initialize
     @spottings = []
