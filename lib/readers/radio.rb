@@ -23,7 +23,7 @@ module Readers
     private
 
     def load_radio_signals
-      File.foreach(@input).with_index do |line, index|
+      File.foreach(@input) do |line|
         line.chomp!
 
         @radio << line
