@@ -19,7 +19,7 @@ class InvaderSpotter
   private
 
   def scan_for_invader
-    @radio.iterate(@invader.width) do |radio_segment, row_index, column_index|
+    @radio.segment(@invader.width) do |radio_segment, row_index, column_index|
       @spottings.add(Spotting.new(@invader, column_index, row_index)) if head_matches?(radio_segment)
 
       @spottings.verify(radio_segment, column_index)
