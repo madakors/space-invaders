@@ -29,7 +29,7 @@ class Spotting
   end
 
   def complete?
-    !@iterator.next?
+    !iterator.next?
   end
 
   def contains?(point_x, point_y)
