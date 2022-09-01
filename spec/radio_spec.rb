@@ -24,4 +24,31 @@ RSpec.describe Radio do
       end
     end
   end
+
+  describe '#segment' do
+    let(:input) { ['--ooooooo--', '---oo-oo---'] }
+    let(:width) { 3 }
+    let(:segments) do
+      {
+        0 => ['--o', '-oo', 'ooo', 'ooo', 'ooo', 'ooo', 'ooo', 'oo-', 'o--'],
+        1 => ['---', '--o', '-oo', 'oo-', 'o-o', '-oo', 'oo-', 'o--', '---']
+      }
+    end
+
+    it 'yields segments' do
+      radio.segment(3) do |segment, row, column|
+        expect(segment).to eq(segments[row][column])
+      end
+    end
+  end
+
+  describe '#each_with_index' do
+    let(:input) { ['--ooooooo--', '---oo-oo---'] }
+
+    it 'delegates to the instance variable' do
+      expect(radio.instance_variable_get('@radio')).to receive(:each_with_index).once
+
+      radio.each_with_index
+    end
+  end
 end
