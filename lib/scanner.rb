@@ -2,14 +2,12 @@
 
 # Scans the radio feed for invaders, using a dedicated spotter for each invader
 class Scanner
-  DEFAULT_PRECISION = 5
-
   def initialize(radio, invaders)
     @radio = radio
     @invaders = invaders
   end
 
-  def scan(_precision = DEFAULT_PRECISION)
+  def scan
     result = @invaders.map { |invader| InvaderSpotter.new(invader, @radio) }.map(&:scan)
 
     Spottings.from_array(result.flatten)
