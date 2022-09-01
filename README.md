@@ -26,3 +26,9 @@ False positives are discarded when the number of differences is too high.
 
 At the end, the radio feed is printed again with the spotted invaders highlighted
 in blue.
+
+### Commit log
+
+The commits are not squashed on purpose to show how the various classes have
+emerged during implementation/testing, how the method names adopted more and more
+the language of the domain.
