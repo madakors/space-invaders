@@ -15,6 +15,8 @@ class SpotterAlgorithm
     radio_segment == invader_line ? 0 : 1
   end
 
+  attr_writer :limit
+
   private
 
   LIMIT = 5
